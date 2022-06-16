@@ -1,8 +1,9 @@
-import Text from './Text'
-import { View, TextInput, Pressable, StyleSheet } from 'react-native'
+import { View, TextInput, Pressable, StyleSheet, Button } from 'react-native'
 import { Formik, useField } from 'formik'
 import FormikTextInput from './FormikTextInput'
 import * as yup from 'yup'
+import useSignIn from '../hooks/useSignIn'
+import { useHistory } from 'react-router-native'
 
 const styles = StyleSheet.create({
     container: {
@@ -46,15 +47,22 @@ const LoginForm = ({ onSubmit }) => (
     <View style={styles.container}>
         <FormikTextInput name="username" placeholder="Username" style={styles.inputField} />
         <FormikTextInput name="password" placeholder="Password" secureTextEntry={true} style={styles.inputField} />
-        <Pressable onSubmit={onSubmit} style={styles.buttonPressable}>
-            <Text color="headingPrimary" style={styles.buttonTitle}>Login</Text>
-        </Pressable>
+        <Button onPress={onSubmit} style={styles.buttonPressable} title="Login" />
     </View>
 )
 
 const Login = () => {
-    const onSubmit = values => {
+    const history = useHistory()
+    const [ signIn ] = useSignIn()
+    const onSubmit = async (values) => {
+        const { username, password } = values
         console.log(values)
+        try {
+            await signIn({ username, password })
+            history.push('/')
+        } catch(err) {
+            console.log(err)
+        }
     }
     return  (
         <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={inputValidationSchema}>
