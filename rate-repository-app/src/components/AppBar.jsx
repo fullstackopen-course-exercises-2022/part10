@@ -1,12 +1,10 @@
-import { View, StyleSheet, Pressable, ScrollView } from 'react-native'
+import { View, StyleSheet, ScrollView } from 'react-native'
 import Constants from 'expo-constants'
-import Text from './Text'
 import theme from '../theme'
 import { Link, useHistory } from 'react-router-native'
 import AppBarItem from './AppBarItem'
 import { ME } from '../graphql/queries'
 import { useQuery } from '@apollo/client'
-import useAuthStorage from '../hooks/useAuthStorage'
 import { useApolloClient } from '@apollo/client'
 import { useContext } from 'react'
 import AuthStorageContext from '../context/AuthStorageContext'
@@ -45,15 +43,28 @@ const AppBar = () => {
                 <Link style={styles.text} to='/'>
                     <AppBarItem name='Repositories' />
                 </Link>
-                {data?.me ?
-                    <Link style={styles.text} onPress={handleLogout}>
-                        <AppBarItem name='Log Out' />
-                    </Link>
-                    :
-                    <Link style={styles.text} to='/login'>
-                        <AppBarItem name='Login' />
-                    </Link>
-                }
+                {data?.me ? (
+                    <>
+                        <Link style={styles.text} to='/review-repository'>
+                            <AppBarItem name='Create a Review' />
+                        </Link>
+                        <Link style={styles.text} to='/my-reviews'>
+                            <AppBarItem name='My Reviews' />
+                        </Link>
+                        <Link style={styles.text} onPress={handleLogout}>
+                            <AppBarItem name='Log Out' />
+                        </Link>
+                    </>
+                ) : (
+                    <>
+                        <Link style={styles.text} to='/login'>
+                            <AppBarItem name='Sign In' />
+                        </Link>
+                        <Link style={styles.text} to='/signup'>
+                            <AppBarItem name='Sign Up' />
+                        </Link>
+                    </>
+                )}
             </ScrollView>
         </View>
     )

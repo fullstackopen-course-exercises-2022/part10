@@ -1,5 +1,7 @@
-import { Text, View, StyleSheet, Image, ScrollView } from 'react-native'
-import theme from "../theme";
+import {Text, View, StyleSheet, Image, ScrollView, Pressable, Button} from 'react-native'
+import theme from '../theme'
+import { useHistory } from 'react-router-native'
+import * as Linking from 'expo-linking'
 
 const styles = StyleSheet.create({
     container: {
@@ -41,41 +43,56 @@ const styles = StyleSheet.create({
         fontWeight: theme.fontWeights.bold,
         textAlign: 'center'
     },
+    buttonStyle: {
+        backgroundColor: '#007acc',
+        width: '100%',
+        padding: 10
+    }
 })
 
-const RepositoryItem = ({ item }) => (
-    <View style={styles.container}>
-        <ScrollView vertical>
-            <View style={styles.flexRepo}>
-                <Image style={styles.repoImage} source={{uri: item.ownerAvatarUrl}} />
-                <View>
-                    <Text style={styles.repoText}>{item.fullName}</Text>
-                    <Text style={styles.repoText}>{item.description}</Text>
-                    <View style={styles.languageContainer}>
-                        <Text style={styles.languageText}>{item.language}</Text>
+const RepositoryItem = ({ item, singleView }) => {
+    const history = useHistory()
+    const clickRepository = () => {
+        history.push(`/view/${item?.id}`)
+    }
+    const openRepository = async () => {
+        await Linking.openURL(item.url)
+    }
+    return (
+        <Pressable style={styles.container} onPress={clickRepository}>
+            <ScrollView vertical>
+                <View style={styles.flexRepo}>
+                    <Image style={styles.repoImage} source={{uri: item?.ownerAvatarUrl}} />
+                    <View>
+                        <Text style={styles.repoText} testID="fullName">{item?.fullName}</Text>
+                        <Text style={styles.repoText} testID="description">{item?.description}</Text>
+                        <View style={styles.languageContainer}>
+                            <Text style={styles.languageText} testID="language">{item?.language}</Text>
+                        </View>
                     </View>
                 </View>
-            </View>
-            <View style={styles.flexRepoStats}>
-                <View>
-                    <Text style={{ textAlign: 'center' }}>{item.stargazersCount}</Text>
-                    <Text>Stars</Text>
+                <View style={styles.flexRepoStats}>
+                    <View>
+                        <Text style={{ textAlign: 'center' }} testID="stargazersCount">{item?.stargazersCount}</Text>
+                        <Text>Stars</Text>
+                    </View>
+                    <View>
+                        <Text style={{ textAlign: 'center' }} testID="forksCount">{item?.forksCount}</Text>
+                        <Text>Forks</Text>
+                    </View>
+                    <View>
+                        <Text style={{ textAlign: 'center' }} testID="reviewCount">{item?.reviewCount}</Text>
+                        <Text>Reviews</Text>
+                    </View>
+                    <View>
+                        <Text style={{ textAlign: 'center' }} testID="ratingAverage">{item?.ratingAverage}</Text>
+                        <Text>Rating</Text>
+                    </View>
                 </View>
-                <View>
-                    <Text style={{ textAlign: 'center' }}>{item.forksCount}</Text>
-                    <Text>Forks</Text>
-                </View>
-                <View>
-                    <Text style={{ textAlign: 'center' }}>{item.reviewCount}</Text>
-                    <Text>Reviews</Text>
-                </View>
-                <View>
-                    <Text style={{ textAlign: 'center' }}>{item.ratingAverage}</Text>
-                    <Text>Rating</Text>
-                </View>
-            </View>
-        </ScrollView>
-    </View>
-)
+                {singleView && <Button style={styles.buttonStyle} title="GitHub Link" onPress={openRepository} />}
+            </ScrollView>
+        </Pressable>
+    )
+}
 
 export default RepositoryItem

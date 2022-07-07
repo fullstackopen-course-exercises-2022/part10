@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { GET_REPOS } from '../graphql/queries'
 import { useQuery } from '@apollo/client'
 
-function UseRepositories() {
+function useRepositories(searchKeyword) {
     const [repos, setRepos] = useState()
     const [loading, setLoading] = useState(false)
-    const {data} = useQuery(GET_REPOS, {
-        fetchPolicy: 'cache-and-network'
+
+    const { data } = useQuery(GET_REPOS, {
+        fetchPolicy: "cache-and-network",
+        variables: { searchKeyword }
     })
 
     const fetchRepositories = async () => {
@@ -22,4 +24,4 @@ function UseRepositories() {
     return { repos, loading, refetch: fetchRepositories }
 }
 
-export default UseRepositories
+export default useRepositories

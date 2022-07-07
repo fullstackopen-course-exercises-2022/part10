@@ -1,5 +1,5 @@
-import { View, TextInput, Pressable, StyleSheet, Button } from 'react-native'
-import { Formik, useField } from 'formik'
+import { View, StyleSheet, Button } from 'react-native'
+import { Formik } from 'formik'
 import FormikTextInput from './FormikTextInput'
 import * as yup from 'yup'
 import useSignIn from '../hooks/useSignIn'
@@ -43,11 +43,11 @@ const inputValidationSchema = yup.object().shape({
         .required('Password is required!')
 })
 
-const LoginForm = ({ onSubmit }) => (
+export const LoginForm = ({ onSubmit }) => (
     <View style={styles.container}>
-        <FormikTextInput name="username" placeholder="Username" style={styles.inputField} />
-        <FormikTextInput name="password" placeholder="Password" secureTextEntry={true} style={styles.inputField} />
-        <Button onPress={onSubmit} style={styles.buttonPressable} title="Login" />
+        <FormikTextInput testID="username" name="username" placeholder="Username" style={styles.inputField} />
+        <FormikTextInput testID="password" name="password" placeholder="Password" secureTextEntry={true} style={styles.inputField} />
+        <Button onPress={onSubmit} style={styles.buttonPressable} title="Login" testID="Login" />
     </View>
 )
 
@@ -64,7 +64,7 @@ const Login = () => {
             console.log(err)
         }
     }
-    return  (
+    return (
         <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={inputValidationSchema}>
             {({handleSubmit}) => <LoginForm onSubmit={handleSubmit} />}
         </Formik>
